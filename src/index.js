@@ -13,7 +13,7 @@ ReactDOM.render(
   <Router>
     <div className="container">
       <Navbar/>
-        <div className="test">
+        <div className="test img-responsive">
           <Route exact path="/" component={App}/>
           <Route path="/forecast" component={Forecast}/>
           <Route path="/about" component={About}/>

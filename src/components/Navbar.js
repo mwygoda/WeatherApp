@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 class Navbar extends Component {
   render(){
@@ -18,18 +18,21 @@ class Navbar extends Component {
                 <h3 style={{marginRight: 10}} className="bolder tempText">React Weather App</h3>
               </li>
               <li className="navLinks active">
-                <Link to="/">Home</Link>
+                <NavLink to="/">Home</NavLink>
               </li>
               <li className="navLinks active">
-                <Link to="/forecast">Forecast</Link>
+                <NavLink to="/forecast">Forecast</NavLink>
               </li>
               <li className="navLinks active">
-                <Link to="/about">About</Link>
+                <NavLink to="/about">About</NavLink>
               </li>
+                <li className="navLinks active navbar-right gitIcon">
+                    <a href="https://github.com/mwygoda">
+                        <img alt ="git icon" border="0" height="22rem" src={require('../../public/git.ico')}  />
+                    </a>
+                </li>
             </ul>
-            <div className="nav navbar-right">
-              
-            </div>
+
           </div>
         </div>
       </nav>

@@ -18,12 +18,10 @@ body, html {
   font-size: 5rem;
 }
 .weatherForm {
-  /*opacity: 0.6;*/
   background: rgba(58, 63, 68, 0.6);
 }
 .transparentButton {
   background: rgba(58, 63, 68, 0.6);
-  /*background: rgba(200,200,200, 0.6);*/
 }
 
 .tempText {
@@ -36,12 +34,9 @@ body, html {
   color: white;
 }
 .navApp {
-  /*opacity: 0.6;*/
   justify-content: space-around;
   align-content: center;
-  /*background: rgba(20%, 24%, 35%, 1);*/
   background: #404853;
-  /*background: darkgrey;*/
   padding-bottom: 0;
   margin-bottom: 1rem;
 }
@@ -70,23 +65,7 @@ margin-top: 0;
   font-size: 1.75rem;
 }
 
-/*html,body,.container {
-    height:100%;
+.gitIcon {
+  display: flex;
+  margin-top: 2rem;
 }
-.container {
-    display:table;
-    width: 100%;
-    margin-top: -50px;
-    padding: 50px 0 0 0; /*set left/right padding according to needs*/
-    /*box-sizing: border-box;
-}
-
-.row {
-    height: 100%;
-    display: table-row;
-}
-
-.row .no-float {
-  display: table-cell;
-  float: none;
-}*/
