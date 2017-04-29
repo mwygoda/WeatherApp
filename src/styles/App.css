@@ -1,14 +1,7 @@
 .App {
   text-align: center;
 }
-body, html {
-  height: 100%;
-  /*background-color: grey;*/
-}
-/*.container {
-  display: table;
-}*/
-/*html, body, div {height:100%;}*/
+
 .Spinner {
   display: flex;
   justify-content: center;
@@ -44,7 +37,6 @@ body, html {
 .test {
   background-image: url("../../public/weather1UX.png");
   background-repeat: repeat-y;
-  background-size: center;
 }
 .container .full{
   height: 100vh;
@@ -52,11 +44,7 @@ body, html {
 
 .inputButton {
   padding-top: 0;
-margin-top: 0;
-  justify-content: center;
-  vertical-align: middle;
-  align-content: center;
-  align-self: center;
+  margin-top: 0;
   padding-bottom: 3rem;
 }
 

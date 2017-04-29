@@ -1,62 +1,49 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import {geolocated} from 'react-geolocated';
 import './styles/App.css';
-import BubbleSpinner from './components/BubbleSpinner';
+import Spinner from './components/Spinner';
+import WeatherMessage from './components/WeatherMessage';
+import {getTempByGeo, getTempByName} from './api/WeatherApi';
 
 class App extends Component {
 
   state={
     temp: "",
-    icon: ""
+    icon: "",
+    locationName: ""
   };
   getCurrentTemp(event){
     event.preventDefault()
 
      var location = this.refs.location.value;
-
-    axios.get('http://api.openweathermap.org/data/2.5/weather?appid=11ea233f65a3156f2900cbfa3976d4a9&units=metric&q='+location)
-    .then((response) => {
-      this.setState({temp: response.data.main.temp, icon: response.data.weather[0].icon}, function() {
-        console.log(response);
-      })
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+      getTempByName(location).then( ({temp,icon, locationName}) => {
+       this.setState({
+         temp,
+         icon,
+         locationName: location
+       });
+     })
+     .catch( () => {
+       alert("type correct city");
+     });
   }
-  renderIcon(){
-    var icon = 'http://openweathermap.org/img/w/' + this.state.icon + '.png';
-    console.log(icon);
-    if(this.state.icon !== "")
-    {
-        return (
-          <div>
-            <p className="tempText">
-              and it's like
-              <img height="100rem" color="pink" src={icon} />
-            </p>
-          </div>
 
-    );
-    }
-        return "";
-  }
   getCurrentTempByGeo(event) {
     event.preventDefault()
-    console.log(this.props);
     if(this.props.coords !== null)
     {
-
-        axios.get('http://api.openweathermap.org/data/2.5/weather?appid=11ea233f65a3156f2900cbfa3976d4a9&units=metric&lat='+this.props.coords.latitude+'&lon='+this.props.coords.longitude)
-        .then((response) => {
-          this.setState({temp: response.data.main.temp, icon: response.data.weather[0].icon}, function() {
-            console.log(response);
-          })
-        })
-        .catch((err)=>{
-          console.log(err);
+      getTempByGeo(this.props.coords)
+      .then( ({temp,icon, locationName}) => {
+        this.setState({
+          temp,
+          icon,
+          locationName
         });
+      })
+      .catch( (err) => {
+        alert("Cannot find your location!");
+        console.log(err);
+      });
     }
   }
 
@@ -64,14 +51,12 @@ class App extends Component {
     if(this.props.coords)
     {
       return(
-        <form onSubmit={this.getCurrentTempByGeo.bind(this)}>
-        <button className="transparentButton tempText btn btn-default btn-block">Check the weather in your location!</button>
-      </form>
+        <button className="transparentButton tempText btn btn-default btn-block" onClick={this.getCurrentTempByGeo.bind(this)}>Check the weather in your location!</button>
     );
   } else {
     return (
       <div className="Spinner">
-      <BubbleSpinner/>
+      <Spinner type='bubbles' color='#FF0FF' left='50%' />
       </div>
     )
   }
@@ -86,10 +71,7 @@ class App extends Component {
       );
     } else{
       return(
-        <h2 className="tempText">
-          It is {this.state.temp}°C there!
-          {this.renderIcon()}
-        </h2>
+        <WeatherMessage icon={this.state.icon} temp={this.state.temp} locationName={this.state.locationName} />
       );
     }
   }
@@ -100,15 +82,14 @@ class App extends Component {
       <br />
         <div className="row">
           <div className="col-md-8 col-md-offset-2">
-            <div className="">
               <div className="panel weatherForm  panel-primary">
-                <div className="panel-header">
+                <div className="Well">
                   <h2 className="bolder tempText">Check the weather!</h2>
                 </div>
                 <div className="panel-body">
                   <form className="form-horizontal" onSubmit={this.getCurrentTemp.bind(this)}>
                     <div className="form-group">
-                      <div className="col-md-6 col-md-offset-3">
+                      <div className="col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3">
                         <input className="text-center tempText form-control" type="search" ref="location" placeholder="Enter the name of the city"/>
                             {this.renderTemp()}
                             {this.renderButton()}
@@ -117,7 +98,6 @@ class App extends Component {
                   </form>
                   </div>
                 </div>
-            </div>
           </div>
         </div>
     </div>
