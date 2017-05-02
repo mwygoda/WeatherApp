@@ -1,4 +1,5 @@
 import React from 'react';
+import './../styles/App.css';
 
  const ForecastTable = ({
    header,
@@ -18,7 +19,7 @@ import React from 'react';
       <table className="table table-condensed table-responive">
         <thead>
           <tr>
-            <th className="bolder" style={{border: 0, paddingLeft: "4rem"}}>{date}</th>
+            <th className="bolder" style={{border: 0, fontSize: "1.75rem", paddingLeft: "4rem"}}>{date}</th>
           </tr>
         </thead>
         <tbody>
@@ -26,7 +27,7 @@ import React from 'react';
             <td style={{ color: "white"}}>
               <tr>
                 <td>
-                  <img style={{marginLeft: "2rem"}} height="64"src={icon}/>
+                  <img style={{paddingLeft: "4rem", marginTop: "1rem"}} alt="weather icon" height="64" src={icon}/>
                   {temp}°C
                 </td>
               </tr>
@@ -41,36 +42,36 @@ import React from 'react';
             <td>
               <tr>
                 <td>
-                  <label style={{marginTop: "2rem"}}>T.min: </label> {tmin}°C
+                  <label className="tableCell">T.min: </label> {tmin}°C
                 </td>
               </tr>
               <tr>
                 <td>
-                  <label style={{marginTop: "2rem"}}>Wind: </label> {wind}km/h
+                  <label className="tableCell">Wind: </label> {wind}km/h
                 </td>
               </tr>
             </td>
             <td>
               <tr>
                 <td>
-                  <label style={{marginTop: "2rem"}}>Clouds: </label> {clouds}%
+                  <label className="tableCell">Clouds: </label> {clouds}%
                 </td>
             </tr>
             <tr>
               <td>
-                <label style={{marginTop: "2rem"}}>Humidity: </label> {humidity}%
+                <label className="tableCell">Humidity: </label> {humidity}%
               </td>
             </tr>
               </td>
           <td>
             <tr>
               <td>
-                <label style={{marginTop: "2rem"}}>Rain: </label> {rain}mm/1h
+                <label className="tableCell">Rain: </label> {rain}mm/1h
               </td>
             </tr>
             <tr>
               <td>
-                <label style={{marginTop: "2rem"}}>Pressure: </label> {pressure}hPa
+                <label className="tableCell">Pressure: </label> {pressure}hPa
               </td>
             </tr>
           </td>

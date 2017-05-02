@@ -1,15 +1,31 @@
 import React, { Component } from 'react';
+import Switch from 'react-bootstrap-switch';
+import moment from 'moment';
 import ForecastTable from './ForecastTable';
-import { getForecastByName } from './../api/WeatherApi';
+import './../styles/App.css';
+import 'react-bootstrap-switch/dist/css/bootstrap3/react-bootstrap-switch.css';
+import { getForecastByName, getDailyForecastByName } from './../api/WeatherApi';
+import Spinner from './Spinner';
 
 class Forecast extends Component {
   state={
     info:"",
-    fetching: false
+    infoDaily:"",
+    fetching: false,
+    checked: true,
   }
 
-  getHourlyForecast(e){
+  getForecast(e){
     e.preventDefault();
+    if(this.state.checked === true)
+    {
+      return this.getHourlyForecast();
+    }else {
+      return this.getDailyForecast();
+    }
+  }
+
+  getHourlyForecast(){
     let location = this.refs.location.value;
 
     this.setState({
@@ -18,53 +34,67 @@ class Forecast extends Component {
     });
 
     getForecastByName(location)
-    .then( (response) => {
+    .then((response) => {
       let data = response;
       this.setState({
-        fetching: true,
+        fetching: false,
         info: data
       });
     })
-    .catch( (err) => {
+    .catch((err) => {
       console.log(err);
       alert("Enter valid city name");
     });
   }
+
+  getDailyForecast(){
+    let location = this.refs.location.value;
+    this.setState({
+      infoDaily: "",
+      fetching: true
+    });
+
+    getDailyForecastByName(location)
+    .then((response) => {
+      let data = response;
+      this.setState({
+        fetching: false,
+        infoDaily: data
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+      alert("Enter valid city name")
+    });
+  }
+
   renderTable(){
     if(this.state.info !== ""){
-      // let i = iterator;
-      // if(typeof this.state.info.list[i].rain != "undefined"){
-      //   rain = this.state.info.list[i].rain['3h'];
-      // }else {
-      //   rain ="0";
-      // }
       let rain;
-      const numbers = [0, 1, 2, 3, 4, 5,6,7,8,9,10];
+      const numbers = [0, 1, 2, 3, 4, 5];
+
       const listItems = numbers.map((number,data) =>{
-        if(typeof this.state.info.list[number].rain !== "undefined"){
-          if(rain = this.state.info.list[number].rain['3h'])
-          {
-            rain = this.state.info.list[number].rain['3h']
-          }else{
-            rain ="0";
-          }
-        }else {
-          rain ="0";
-        }
         data = this.state.info.list[number];
-          return (
+
+        if(typeof data.rain !== "undefined" && data.rain['3h']){
+          rain = data.rain['3h'];
+        }else{
+          rain = 0;
+        }
+
+        return (
             <ForecastTable
-            key={number}
-            date={data.dt_txt}
-            desc={data.weather[0].description}
-            icon={"http://openweathermap.org/img/w/"+data.weather[0].icon + ".png"}
-            temp={data.main.temp}
-            tmin={data.main.temp_min}
-            wind={data.wind.speed}
-            clouds={data.clouds.all}
-            humidity={data.main.humidity}
-            rain={rain}
-            pressure={data.main.pressure}
+              key={number}
+              date={data.dt_txt}
+              desc={data.weather[0].description}
+              icon={"http://openweathermap.org/img/w/"+data.weather[0].icon + ".png"}
+              temp={data.main.temp}
+              tmin={data.main.temp_min}
+              wind={data.wind.speed}
+              clouds={data.clouds.all}
+              humidity={data.main.humidity}
+              rain={rain}
+              pressure={data.main.pressure}
             />
         )
       });
@@ -74,42 +104,97 @@ class Forecast extends Component {
           {listItems}
         </div>
       )
-      // return (
-      //   <ForecastTable
-      //     date={this.state.info.list[i].dt_txt}
-      //     desc={this.state.info.list[i].weather[0].description}
-      //     icon={"http://openweathermap.org/img/w/"+this.state.info.list[i].weather[0].icon + ".png"}
-      //     temp={this.state.info.list[i].main.temp}
-      //     tmin={this.state.info.list[i].main.temp_min}
-      //     wind={this.state.info.list[i].wind.speed}
-      //     clouds={this.state.info.list[i].clouds.all}
-      //     humidity={this.state.info.list[i].main.humidity}
-      //     rain={rain}
-      //     pressure={this.state.info.list[i].main.pressure}
-      //     />
-      // );
     }
   }
-  // renderContent(){
-  //   const numbers = [1, 2, 3, 4, 5];
-  //   const listItems = numbers.map((number) =>
-  // this.renderTable(number)
-  // }
-              // {this.renderContent()}
+
+  renderDailyTable(){
+    if(this.state.infoDaily !== ""){
+      let rain;
+      const numbers = [0, 1, 2, 3, 4, 5];
+
+      const listItems = numbers.map((number,data) =>{
+        data = this.state.infoDaily.list[number];
+        if(typeof data.rain !== "undefined" ){
+          rain = data.rain;
+        }else{
+          rain = 0;
+        }
+
+        return (
+            <ForecastTable
+              key={number}
+              date={moment().add(number, 'days').format("DD MMM YYYY")}
+              desc={data.weather[0].description}
+              icon={"http://openweathermap.org/img/w/"+data.weather[0].icon + ".png"}
+              temp={data.temp.max}
+              tmin={data.temp.min}
+              wind={data.speed}
+              clouds={data.clouds}
+              humidity={data.humidity}
+              rain={rain}
+              pressure={data.pressure}
+            />
+        )
+      });
+
+      return (
+        <div>
+          {listItems}
+        </div>
+      )
+    }
+  }
+
+  renderSpinner(){
+    if(this.state.fetching){
+      return (
+        <div className="Spinner">
+          <Spinner type='spin' color='#FF0FF' left='50%' />
+        </div>
+      );
+    }
+  }
+
+  handleSwitch(e) {
+  this.setState({
+   checked: e.state.value
+ });
+}
+
+  renderContent(){
+    if(this.state.checked === true){
+      return this.renderTable();
+    }else{
+      return this.renderDailyTable();
+    }
+  }
+
   render(){
-    let header = "Hourly forecast";
+    let header = "Forecast";
 
     return(
       <div className="container">
         <div className="row">
           <div className="col-md-8 col-md-offset-2">
+            <div className="switchForecast">
+              <Switch
+                onText="hourly"
+                offText="daily"
+                offColor="success"
+                onColor="info"
+                onChange={this.handleSwitch.bind(this)}
+                 />
+            </div>
             <h2 className="bolder text-center">{header}</h2>
               <div className="col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3">
-                <form className="form-vertical" onSubmit={this.getHourlyForecast.bind(this)}>
+                <form className="form-vertical" onSubmit={this.getForecast.bind(this)}>
                   <input style={{marginBottom: "2rem"}} className="text-center tempText form-control" type="search" ref="location" placeholder="Enter the name of the city"/>
                 </form>
               </div>
-              {this.renderTable()}
+            {this.renderContent()}
+            <div className="Spinner">
+              {this.renderSpinner()}
+            </div>
         </div>
       </div>
     </div>

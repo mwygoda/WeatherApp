@@ -35,8 +35,8 @@
 }
 
 .test {
-  background-image: url("../../public/weather1UX.png");
-  background-repeat: repeat-y;
+  background-image: url("../../public/weatherUX.png");
+  background-size: cover;
 }
 .container .full{
   height: 100vh;
@@ -56,4 +56,13 @@
 .gitIcon {
   display: flex;
   margin-top: 2rem;
+}
+.tableCell {
+  margin-top: 2rem;
+}
+.switchForecast {
+  display: flex;
+  justify-content: center;
+  margin-top: 4rem;
+  color: white;
 }

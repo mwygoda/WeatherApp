@@ -70,7 +70,6 @@ class App extends Component {
     if(this.state.temp ==="")
     {
       if (this.state.isFetching === true) {
-        console.log('jestem here spinner');
         return(
           <div className="Spinner">
             <Spinner type='spin' color='#FF0FF' left='50%' />
