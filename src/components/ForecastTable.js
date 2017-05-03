@@ -66,7 +66,7 @@ import './../styles/App.css';
           <td>
             <tr>
               <td>
-                <label className="tableCell">Rain: </label> {rain}mm/1h
+                <label className="tableCell">Rain: </label> {rain}
               </td>
             </tr>
             <tr>

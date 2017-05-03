@@ -7,12 +7,17 @@ import 'react-bootstrap-switch/dist/css/bootstrap3/react-bootstrap-switch.css';
 import { getForecastByName, getDailyForecastByName } from './../api/WeatherApi';
 import Spinner from './Spinner';
 
+// location 2x i ifa 
+///todo extration to vars
+//navbar collapse
+
 class Forecast extends Component {
   state={
     info:"",
     infoDaily:"",
     fetching: false,
     checked: true,
+    location:""
   }
 
   getForecast(e){
@@ -29,7 +34,7 @@ class Forecast extends Component {
     let location = this.refs.location.value;
 
     this.setState({
-      info: "",
+    //  infoDaily: "",
       fetching: true
     });
 
@@ -38,8 +43,10 @@ class Forecast extends Component {
       let data = response;
       this.setState({
         fetching: false,
-        info: data
+        info: data,
+        location: this.refs.location.value
       });
+      this.refs.location.value = null;
     })
     .catch((err) => {
       console.log(err);
@@ -50,7 +57,7 @@ class Forecast extends Component {
   getDailyForecast(){
     let location = this.refs.location.value;
     this.setState({
-      infoDaily: "",
+    //  info: "",
       fetching: true
     });
 
@@ -59,8 +66,10 @@ class Forecast extends Component {
       let data = response;
       this.setState({
         fetching: false,
-        infoDaily: data
+        infoDaily: data,
+        location: this.refs.location.value
       });
+      this.refs.location.value = null;
     })
     .catch((err) => {
       console.log(err);
@@ -93,7 +102,7 @@ class Forecast extends Component {
               wind={data.wind.speed}
               clouds={data.clouds.all}
               humidity={data.main.humidity}
-              rain={rain}
+              rain={rain+"mm/1h"}
               pressure={data.main.pressure}
             />
         )
@@ -131,7 +140,7 @@ class Forecast extends Component {
               wind={data.speed}
               clouds={data.clouds}
               humidity={data.humidity}
-              rain={rain}
+              rain={rain+"mm/12h"}
               pressure={data.pressure}
             />
         )
@@ -176,7 +185,7 @@ class Forecast extends Component {
       <div className="container">
         <div className="row">
           <div className="col-md-8 col-md-offset-2">
-            <div className="switchForecast">
+            <div className="switchForecast tempText">
               <Switch
                 onText="hourly"
                 offText="daily"
@@ -185,7 +194,8 @@ class Forecast extends Component {
                 onChange={this.handleSwitch.bind(this)}
                  />
             </div>
-            <h2 className="bolder text-center">{header}</h2>
+            <h2 className="bolder tempText text-center">{header}</h2>
+            <h2 className="bolder tempText text-center"> {this.state.location}</h2>
               <div className="col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3">
                 <form className="form-vertical" onSubmit={this.getForecast.bind(this)}>
                   <input style={{marginBottom: "2rem"}} className="text-center tempText form-control" type="search" ref="location" placeholder="Enter the name of the city"/>

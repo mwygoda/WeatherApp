@@ -10,7 +10,7 @@ const Navbar = () => {
               <span className="cloudIcon glyphicon glyphicon-cloud"></span>
             </a>
           </div>
-          <div className="collapse navbar-collapse">
+          <div className="">
 
             <ul className=" list-inline">
               <li>
