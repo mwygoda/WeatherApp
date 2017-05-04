@@ -34,10 +34,11 @@ class App extends Component {
   }
 
   getCurrentTempByGeo(event) {
+    const { coords } = this.props;
     event.preventDefault();
-    if(this.props.coords !== null)
+    if(coords !== null)
     {
-      getTempByGeo(this.props.coords)
+      getTempByGeo(coords)
       .then( ({temp,icon, locationName}) => {
         this.setState({
           temp,
@@ -53,7 +54,8 @@ class App extends Component {
   }
 
   renderButton(){
-    if(this.props.coords)
+    const { coords } = this.props;
+    if(coords)
     {
       return(
         <button className="transparentButton tempText btn btn-default btn-block" onClick={this.getCurrentTempByGeo.bind(this)}>Check the weather in your location!</button>
@@ -67,9 +69,10 @@ class App extends Component {
   }
   }
   renderTemp(){
-    if(this.state.temp ==="")
+    const { temp, isFetching } = this.state;
+    if(temp ==="")
     {
-      if (this.state.isFetching === true) {
+      if (isFetching === true) {
         return(
           <div className="Spinner">
             <Spinner type='spin' color='#FF0FF' left='50%' />

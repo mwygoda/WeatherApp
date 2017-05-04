@@ -7,17 +7,14 @@ import 'react-bootstrap-switch/dist/css/bootstrap3/react-bootstrap-switch.css';
 import { getForecastByName, getDailyForecastByName } from './../api/WeatherApi';
 import Spinner from './Spinner';
 
-// location 2x i ifa 
-///todo extration to vars
-//navbar collapse
-
 class Forecast extends Component {
   state={
     info:"",
     infoDaily:"",
     fetching: false,
     checked: true,
-    location:""
+    locationDaily:"",
+    locationHourly:""
   }
 
   getForecast(e){
@@ -34,7 +31,6 @@ class Forecast extends Component {
     let location = this.refs.location.value;
 
     this.setState({
-    //  infoDaily: "",
       fetching: true
     });
 
@@ -44,7 +40,7 @@ class Forecast extends Component {
       this.setState({
         fetching: false,
         info: data,
-        location: this.refs.location.value
+        locationHourly: location
       });
       this.refs.location.value = null;
     })
@@ -57,7 +53,6 @@ class Forecast extends Component {
   getDailyForecast(){
     let location = this.refs.location.value;
     this.setState({
-    //  info: "",
       fetching: true
     });
 
@@ -67,7 +62,7 @@ class Forecast extends Component {
       this.setState({
         fetching: false,
         infoDaily: data,
-        location: this.refs.location.value
+        locationDaily: location
       });
       this.refs.location.value = null;
     })
@@ -78,20 +73,23 @@ class Forecast extends Component {
   }
 
   renderTable(){
-    if(this.state.info !== ""){
+    const { info } = this.state;
+    if(info !== ""){
       let rain;
       const numbers = [0, 1, 2, 3, 4, 5];
 
       const listItems = numbers.map((number,data) =>{
-        data = this.state.info.list[number];
+        data = info.list[number];
 
         if(typeof data.rain !== "undefined" && data.rain['3h']){
-          rain = data.rain['3h'];
+          rain = data.rain['3h'].toFixed(2);
         }else{
           rain = 0;
         }
 
         return (
+          <div>
+            <br />
             <ForecastTable
               key={number}
               date={data.dt_txt}
@@ -105,31 +103,33 @@ class Forecast extends Component {
               rain={rain+"mm/1h"}
               pressure={data.main.pressure}
             />
+        </div>
         )
       });
-
       return (
         <div>
           {listItems}
         </div>
-      )
+      );
     }
   }
 
   renderDailyTable(){
-    if(this.state.infoDaily !== ""){
+    const { infoDaily } = this.state;
+    if(infoDaily !== ""){
       let rain;
       const numbers = [0, 1, 2, 3, 4, 5];
 
       const listItems = numbers.map((number,data) =>{
-        data = this.state.infoDaily.list[number];
+        data = infoDaily.list[number];
         if(typeof data.rain !== "undefined" ){
-          rain = data.rain;
+          rain = data.rain.toPrecision(2);
         }else{
           rain = 0;
         }
-
         return (
+          <div>
+            <br />
             <ForecastTable
               key={number}
               date={moment().add(number, 'days').format("DD MMM YYYY")}
@@ -143,9 +143,9 @@ class Forecast extends Component {
               rain={rain+"mm/12h"}
               pressure={data.pressure}
             />
+        </div>
         )
       });
-
       return (
         <div>
           {listItems}
@@ -171,20 +171,31 @@ class Forecast extends Component {
 }
 
   renderContent(){
-    if(this.state.checked === true){
-      return this.renderTable();
+    const { checked, locationHourly, locationDaily } = this.state;
+    if(checked === true){
+      return (
+        <div>
+          <h2 className="bolder tempText text-center">{locationHourly}</h2>
+          {this.renderTable()}
+        </div>
+      );
     }else{
-      return this.renderDailyTable();
+      return (
+        <div>
+          <h2 className="bolder tempText text-center">{locationDaily}</h2>
+          {this.renderDailyTable()}
+        </div>
+      );
     }
   }
 
   render(){
-    let header = "Forecast";
+    let header = "Weather forecast";
 
     return(
       <div className="container">
         <div className="row">
-          <div className="col-md-8 col-md-offset-2">
+          <div className="col-md-8 col-md-offset-2 col-sm-12 ">
             <div className="switchForecast tempText">
               <Switch
                 onText="hourly"
@@ -195,16 +206,17 @@ class Forecast extends Component {
                  />
             </div>
             <h2 className="bolder tempText text-center">{header}</h2>
-            <h2 className="bolder tempText text-center"> {this.state.location}</h2>
               <div className="col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3">
                 <form className="form-vertical" onSubmit={this.getForecast.bind(this)}>
                   <input style={{marginBottom: "2rem"}} className="text-center tempText form-control" type="search" ref="location" placeholder="Enter the name of the city"/>
                 </form>
               </div>
-            {this.renderContent()}
-            <div className="Spinner">
-              {this.renderSpinner()}
-            </div>
+              <div className="col-md-12 col-md-offset-0 col-sm-10 col-sm-offset-1">
+                {this.renderContent()}
+                <div className="Spinner">
+                  {this.renderSpinner()}
+                </div>
+              </div>
         </div>
       </div>
     </div>

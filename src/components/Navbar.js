@@ -5,16 +5,14 @@ const Navbar = () => {
     return(
       <nav className="navApp navbar navbar-default">
         <div className="container-fluid">
-          <div className="inputButton navbar-header">
+          <div className="hidden-xs hidden-sm inputButton navbar-header">
             <a className="navbar-brand" href="/">
               <span className="cloudIcon glyphicon glyphicon-cloud"></span>
             </a>
           </div>
-          <div className="">
-
-            <ul className=" list-inline">
-              <li>
-                <h3 style={{marginRight: 10}} className="visible-md-* bolder tempText">React Weather App</h3>
+            <ul className="list-inline">
+              <li className="hidden-sm hidden-xs">
+                <h3 style={{marginRight: 10}} className="bolder tempText">React Weather App</h3>
               </li>
               <li className="navLinks active">
                 <NavLink to="/">Home</NavLink>
@@ -31,9 +29,7 @@ const Navbar = () => {
                     </a>
                 </li>
             </ul>
-
           </div>
-        </div>
       </nav>
     );
 }
